@@ -20,11 +20,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     if ($result->num_rows>0) {
       $_SESSION['userId']=$email;
       echo "user logged in successfully";
-     
+
     }else {
       http_response_code(404);
       echo "wrong credentials ";
-      
+
     }
   }
 
