@@ -1,5 +1,12 @@
 <?php
+
+  use PHPMailer\PHPMailer\PHPMailer;
+  use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
   require_once('dbconnect.php');
+
+ 
+  
   session_start();
   $response = array();
 
@@ -40,13 +47,57 @@
 
   function signUp($email,$password){
     global $dbconnect,$response;
-    $insertSql="insert into user (email,password) values ('$email','$password');";
+
+    // encrypt user password 
+    $password = password_hash($password,PASSWORD_BCRYPT);
+
+    // create random token with 32 character
+    $token = md5(rand(0,1000));
+    
+    $insertSql="insert into user (email,password,token,status) values ('$email','$password','$token','0');";
+
+    // case of successfully inserted
     if($dbconnect->query($insertSql) ) {
-        // $_SESSION['userId']=$email;
         $_SESSION['userId']=$email;
+
+      // user PHPMailer
+      require('PHPMailer/PHPMailer.php');
+      require('PHPMailer/Exception.php');
+      require('PHPMailer/SMTP.php');
+      $mail = new PHPMailer();
+      //Server settings
+      $mail->SMTPDebug = 2;   
+      $mail->isSMTP();                                      
+      $mail->Host = 'smtp.gmail.com'; 
+      $mail->SMTPAuth = true;                                
+      $mail->Username = 'username@gmail.com';  // username              
+      $mail->Password = 'xxxxxxxxxxx'; // password                                  
+      $mail->Port = 587;  
+
+      $mail->setFrom('username@gmail.com','ibra');
+      $mail->addAddress($email);
+
+      //Content
+      $mail->isHTML(true);                                  
+      $mail->Subject ='Email Verefication';
+      $mail->Body = 'hello';
+      
+
+      // if mail successfulley sent
+      if($mail->send()){
         $response['error'] = false;
-        $response['message'] = "successfully created a new account";
-    }else{
+        $response['message'] = "successfully created a new account check your email to verify your account";
+      }
+      // if mail failure
+      else{
+        $response['error'] = true;
+        $response['message'] = "somethig went wrong during sending email please try again ".$mail->ErrorInfo;
+      } 
+
+    }
+
+    // case of failure of inserting into DB
+    else{
       $response['error'] = true;
       $response['message'] = "somethig went wrong please try again";
     }
