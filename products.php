@@ -1,9 +1,7 @@
 <?php
-
-require_once('dbconnect.php');
+header('Content-Type: application/json');
 session_start();
-
-//echo $_SESSION['userId'];
+require_once('dbconnect.php');
 
 
 if ($_SERVER['REQUEST_METHOD']=='POST') {
@@ -17,6 +15,8 @@ if (isset($_POST['name'],$_POST['price']
 }else {
   echo "no parameters ";
 }
+}elseif($_SERVER['REQUEST_METHOD']=='GET'){
+  getProducts();
 }
 
 function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
@@ -31,5 +31,23 @@ function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
     echo "problem inserting ";
   }
 }
+
+function getProducts(){
+  global $dbconnect;
+  $querySql="select * from products";
+  $query=$dbconnect->query($querySql);
+  if ($query->num_rows>0) {
+    $result=array();
+    while ($row=$query->fetch_assoc()) {
+      $result[]=$row;
+    }
+    echo json_encode($result);
+  }
+  else {
+    $result="there is no products";
+    echo json_encode(array('result' => $result ));
+  }
+}
+
 
  ?>
