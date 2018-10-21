@@ -11,13 +11,22 @@ if (isset($_POST['name'],$_POST['price']
   $price=$_POST['price'];
   $quantity=$_POST['quantity'];
   $description=$_POST['description'];
-  addProduct($name,$price,$quantity,$description,1,1);
+  $product=new Products;
+  $product->addProduct($name,$price,$quantity,$description,1,1);
 }else {
   echo "no parameters ";
 }
 }elseif($_SERVER['REQUEST_METHOD']=='GET'){
-  getProducts();
+  $product=new Products;
+  if (isset($_GET['limit'])) {
+    $limit=$_GET['limit'];
+    $product->getProductsWithLimit($limit);
+  }else {
+    $product->getProducts();
+  }
 }
+
+class Products {
 
 function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
 {
@@ -32,9 +41,8 @@ function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
   }
 }
 
-function getProducts(){
+function queryProducts($querySql){
   global $dbconnect;
-  $querySql="select * from products";
   $query=$dbconnect->query($querySql);
   if ($query->num_rows>0) {
     $result=array();
@@ -49,5 +57,17 @@ function getProducts(){
   }
 }
 
+function getProducts(){
+  $querySql="select * from products";
+  $this->queryProducts($querySql);
+}
+function getProductsWithLimit($limit){
+  $querySql="select * from products limit $limit";
+  $this->queryProducts($querySql);
+}
+
+
+
+}
 
  ?>
