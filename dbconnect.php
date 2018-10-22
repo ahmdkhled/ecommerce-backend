@@ -1,13 +1,11 @@
 <?php
-$host='localhost';
-$username='root';
-$password='';
-$db='ecommerce';
 
-$dbconnect=new mysqli($host,$username,$password,$db);
+	require_once('credentials.php');
 
-if ($dbconnect->connect_error) {
-    die("there is problem in connection".$dbconnect->connect_error);
-}
+	$dbconnect=new mysqli(SERVER_NAME,SERVER_USER,SERVER_PASSWORD,DB_NAME);
+
+	if ($dbconnect->connect_error) {
+	    die("there is problem in connection".$dbconnect->connect_error);
+	}
 
  ?>
