@@ -21,8 +21,9 @@ if (isset($_POST['name'],$_POST['price']
   if (isset($_GET['limit'])) {
     $limit=$_GET['limit'];
     $product->getProductsWithLimit($limit);
-  }else {
-    $product->getProducts();
+  } elseif ( isset($_GET['page'] )) {
+    $page=$_GET['page'];
+    $product->getProductsWithPage($page);
   }
 }
 
@@ -63,6 +64,12 @@ function getProducts(){
 }
 function getProductsWithLimit($limit){
   $querySql="select * from products limit $limit";
+  $this->queryProducts($querySql);
+}
+function getProductsWithPage($page){
+  $limit=2;
+  $offset=$limit*($page-1);
+  $querySql="select * from products limit $limit offset $offset";
   $this->queryProducts($querySql);
 }
 
