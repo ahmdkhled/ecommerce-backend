@@ -70,17 +70,19 @@ use PHPMailer\PHPMailer\Exception;
       $mail->isSMTP();                                      
       $mail->Host = 'smtp.gmail.com'; 
       $mail->SMTPAuth = true;                                
-      $mail->Username = 'username@gmail.com';  // username              
-      $mail->Password = 'xxxxxxxxxxx'; // password                                  
+      $mail->Username = 'ibrahimothmanre@gmail.com';  // username              
+      $mail->Password = '796ikiaommmaamon';                                  
       $mail->Port = 587;  
 
-      $mail->setFrom('username@gmail.com','ibra');
+      $mail->setFrom('ibrahimothmanre@gmail.com','ibra');
       $mail->addAddress($email);
 
       //Content
       $mail->isHTML(true);                                  
       $mail->Subject ='Email Verefication';
-      $mail->Body = 'hello';
+      $mail->Body = 'Thanks for registeration 
+      please click on link below to verify your account <br>
+       <a href=localhost/ecommerce-backend/confirm.php?email='.$email.'&amp;token='.$token.'>click here</a>';
       
 
       // if mail successfulley sent
