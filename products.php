@@ -18,13 +18,19 @@ if (isset($_POST['name'],$_POST['price']
 }
 }elseif($_SERVER['REQUEST_METHOD']=='GET'){
   $product=new Products;
-  if (isset($_GET['limit'])) {
-    $limit=$_GET['limit'];
-    $product->getProductsWithLimit($limit);
-  } elseif ( isset($_GET['page'] )) {
-    $page=$_GET['page'];
-    $product->getProductsWithPage($page);
+  $querySql=$product->getQuerySql();
+  //echo $querySql;
+  $product->queryProducts($querySql);
+}
+
+
+
+
+function contains($statement,$word){
+  if (strpos($statement,$word)!==false) {
+    return true;
   }
+  return false;
 }
 
 class Products {
@@ -58,19 +64,62 @@ function queryProducts($querySql){
   }
 }
 
-function getProducts(){
-  $querySql="select * from products";
-  $this->queryProducts($querySql);
+function getQuerySql(){
+  $querySql="select * from products ";
+  $product=new Products;
+  if (isset($_GET['categoryId'])) {
+    $categoryId=$_GET['categoryId'];
+    $querySql.="where categoryId = $categoryId ";
 }
-function getProductsWithLimit($limit){
-  $querySql="select * from products limit $limit";
-  $this->queryProducts($querySql);
+  if (isset($_GET['minPrice'])) {
+    $minPrice=$_GET['minPrice'];
+    if (contains($querySql,"where")) {
+      $querySql.="and price> $minPrice ";
+    }else {
+      $querySql.="where price >$minPrice ";
+    }
+  }
+  if (isset($_GET['maxPrice'])) {
+  $maxPrice=$_GET['maxPrice'];
+  if (contains($querySql,"where")) {
+    $querySql.="and price< $maxPrice > ";
+  }else {
+    $querySql.="where price >$maxPrice ";
+  }
 }
-function getProductsWithPage($page){
+
+if (isset($_GET['orderBy'])) {
+$orderBy=$_GET['orderBy'];
+  $querySql.="order by $orderBy ";
+}
+if (isset($_GET['order'])) {
+$order=$_GET['order'];
+
+if(contains($querySql,"order by")){
+  $querySql.="$order ";
+}else{
+  $querySql.="order by name $order ";
+}
+
+}
+if (isset($_GET['limit'])) {
+$limit=$_GET['limit'];
+  $querySql.="limit $limit ";
+}
+if (isset($_GET['page'])) {
+$page=$_GET['page'];
+if (isset($_GET['limit'])) {
+  $limit=$_GET['limit'];
+  $offset=$limit*($page-1);
+  $querySql.="offset $offset ";
+}else {
   $limit=2;
   $offset=$limit*($page-1);
-  $querySql="select * from products limit $limit offset $offset";
-  $this->queryProducts($querySql);
+  $querySql.="limit $limit offset $offset ";
+}
+
+}
+return $querySql;
 }
 
 
