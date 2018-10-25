@@ -6,13 +6,16 @@ require_once('dbconnect.php');
 
 if ($_SERVER['REQUEST_METHOD']=='POST') {
 if (isset($_POST['name'],$_POST['price']
-,$_POST['quantity'],$_POST['description'])) {
+,$_POST['quantity'],$_POST['description']
+,$_POST['marketId'],$_POST['categoryId'])) {
   $name=$_POST['name'];
   $price=$_POST['price'];
   $quantity=$_POST['quantity'];
   $description=$_POST['description'];
+  $marketId=$_POST['marketId'];
+  $categoryId=$_POST['categoryId'];
   $product=new Products;
-  $product->addProduct($name,$price,$quantity,$description,1,1);
+  $product->addProduct($name,$price,$quantity,$description,$marketId,$categoryId);
 }else {
   echo "no parameters ";
 }
