@@ -28,7 +28,8 @@
   function login($email,$password){
     
      global $dbconnect,$response;
-      $querySql="select * from user where email = '$email' and password ='$password'";
+      $querySql="select * from user where email = '$email' and password ='$password'
+                  and status = 1";
       $result=$dbconnect->query($querySql);
       if ($result->num_rows>0) {
         
