@@ -57,8 +57,7 @@
 
 			$response['error'] = false;
 			$response['message'] = 'status successfully updated';
-			// redirect to login again
-			header("location:../ecommerce-backend/login_form.php");
+			
 
 
 		}else {

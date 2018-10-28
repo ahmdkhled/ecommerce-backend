@@ -49,7 +49,7 @@ use PHPMailer\PHPMailer\Exception;
     global $dbconnect,$response;
 
     // encrypt user password 
-    $password = password_hash($password,PASSWORD_BCRYPT);
+    // $password = password_hash($password,PASSWORD_BCRYPT);
 
     // create random token with 32 character
     $token = md5(rand(0,1000));
@@ -64,17 +64,23 @@ use PHPMailer\PHPMailer\Exception;
       require('PHPMailer/PHPMailer.php');
       require('PHPMailer/Exception.php');
       require('PHPMailer/SMTP.php');
+
+      $userName = ''; // enter username
+      $password = ''; // enter password
+      
       $mail = new PHPMailer();
       //Server settings
-      $mail->SMTPDebug = 2;   
+      $mail->SMTPDebug = 0;   
       $mail->isSMTP();                                      
       $mail->Host = 'smtp.gmail.com'; 
       $mail->SMTPAuth = true;                                
-      $mail->Username = 'ibrahimothmanre@gmail.com';  // username              
-      $mail->Password = '796ikiaommmaamon';                                  
-      $mail->Port = 587;  
+      $mail->Username = $userName;            
+      $mail->Password = $password;                                  
+      $mail->Port = 587;
+      $mail->SMTPSecure = 'tls';
+  
 
-      $mail->setFrom('ibrahimothmanre@gmail.com','ibra');
+      $mail->setFrom($userName,'ibra');
       $mail->addAddress($email);
 
       //Content
@@ -82,13 +88,13 @@ use PHPMailer\PHPMailer\Exception;
       $mail->Subject ='Email Verefication';
       $mail->Body = 'Thanks for registeration 
       please click on link below to verify your account <br>
-       <a href=localhost/ecommerce-backend/confirm.php?email='.$email.'&amp;token='.$token.'>click here</a>';
+       <a href=http://192.168.1.105/ecommerce-backend/confirm.php?email='.$email.'&amp;token='.$token.'>click here</a>';
       
 
       // if mail successfulley sent
       if($mail->send()){
-        $response['error'] = false;
-        $response['message'] = "successfully created a new account check your email to verify your account";
+        $response['error']=false;
+        $response['message']="successfully created a new account please check your email to activate your account";
       }
       // if mail failure
       else{
