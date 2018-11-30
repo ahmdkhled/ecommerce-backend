@@ -130,6 +130,17 @@
 	  $offset=$limit*($page-1);
 	  $querySql.="limit $limit offset $offset ";
 	}
+}else{
+	$page=1;
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=2;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
 }
 	return $querySql;
 	}
