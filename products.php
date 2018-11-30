@@ -18,7 +18,7 @@
 		  $product->addProduct($name,$price,$quantity,$description,$marketId,$categoryId);
 		}else {
 		  echo "no parameters ";
-		}	
+		}
 	}elseif($_SERVER['REQUEST_METHOD']=='GET'){
 	  $product=new Products;
 	  $querySql=$product->getQuerySql();
@@ -70,9 +70,19 @@
 	function getQuerySql(){
 	  $querySql="select * from products ";
 	  $product=new Products;
+
+		if (isset($_GET['id'])) {
+			$id=$_GET['id'];
+			$querySql.="where id in ($id)";
+		}
+
 	  if (isset($_GET['categoryId'])) {
 	    $categoryId=$_GET['categoryId'];
-	    $querySql.="where categoryId = $categoryId ";
+			 if (contains($querySql,"where")) {
+				 $querySql.="and categoryId = $categoryId ";
+			 }else{
+				 $querySql.="where categoryId = $categoryId ";
+			 }
 	}
 	  if (isset($_GET['minPrice'])) {
 	    $minPrice=$_GET['minPrice'];
@@ -120,8 +130,7 @@
 	  $offset=$limit*($page-1);
 	  $querySql.="limit $limit offset $offset ";
 	}
-
-	}
+}
 	return $querySql;
 	}
 
