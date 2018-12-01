@@ -4,6 +4,13 @@ require_once('dbconnect.php');
 
 if($_SERVER['REQUEST_METHOD']=="GET"){
   getMarkets();
+}elseif($_SERVER['REQUEST_METHOD']=="POST"){
+  if (isset($_POST['name'])) {
+    $name=$_POST['name'];
+    createMarket($name,"1");
+  }else{
+    echo json_encode(Array('result'=>'no parameters'));
+  }
 }
 
 
@@ -40,4 +47,17 @@ function getMarkets(){
         echo json_encode(array('result' => $result ));
       }
 }
+
+function createMarket($name,$userId){
+  global $dbconnect;
+  $insertSql="insert into markets (name,userId) values ('$name','$userId')";
+
+  if ($dbconnect->query($insertSql)) {
+    echo json_encode(array("result"=>"market created successfully "));
+  }else {
+    echo json_encode(array("result"=>"error creating market"));
+  }
+
+}
+
  ?>

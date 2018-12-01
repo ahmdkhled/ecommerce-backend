@@ -1,132 +1,152 @@
 <?php
-header('Content-Type: application/json');
-session_start();
-require_once('dbconnect.php');
+	header('Content-Type: application/json');
+	session_start();
+	require_once('dbconnect.php');
 
 
-if ($_SERVER['REQUEST_METHOD']=='POST') {
-if (isset($_POST['name'],$_POST['price']
-,$_POST['quantity'],$_POST['description']
-,$_POST['marketId'],$_POST['categoryId'])) {
-  $name=$_POST['name'];
-  $price=$_POST['price'];
-  $quantity=$_POST['quantity'];
-  $description=$_POST['description'];
-  $marketId=$_POST['marketId'];
-  $categoryId=$_POST['categoryId'];
-  $product=new Products;
-  $product->addProduct($name,$price,$quantity,$description,$marketId,$categoryId);
-}else {
-  echo "no parameters ";
-}
-}elseif($_SERVER['REQUEST_METHOD']=='GET'){
-  $product=new Products;
-  $querySql=$product->getQuerySql();
-  //echo $querySql;
-  $product->queryProducts($querySql);
-}
+	if ($_SERVER['REQUEST_METHOD']=='POST') {
+		if (isset($_POST['name'],$_POST['price']
+		,$_POST['quantity'],$_POST['description']
+		,$_POST['marketId'],$_POST['categoryId'])) {
+		  $name=$_POST['name'];
+		  $price=$_POST['price'];
+		  $quantity=$_POST['quantity'];
+		  $description=$_POST['description'];
+		  $marketId=$_POST['marketId'];
+		  $categoryId=$_POST['categoryId'];
+		  $product=new Products;
+		  $product->addProduct($name,$price,$quantity,$description,$marketId,$categoryId);
+		}else {
+		  echo "no parameters ";
+		}
+	}elseif($_SERVER['REQUEST_METHOD']=='GET'){
+	  $product=new Products;
+	  $querySql=$product->getQuerySql();
+	  //echo $querySql;
+	  $product->queryProducts($querySql);
+	}
 
 
 
 
-function contains($statement,$word){
-  if (strpos($statement,$word)!==false) {
-    return true;
-  }
-  return false;
-}
+	function contains($statement,$word){
+	  if (strpos($statement,$word)!==false) {
+	    return true;
+	  }
+	  return false;
+	}
 
-class Products {
+	class Products {
 
-function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
-{
-  global $dbconnect;
-  $insertSql="insert into products (name,price,quantity,description,marketId,categoryId) values"
-  ."('$name','$price','$quantity','$description','$marketId','$categoryId')";
+	function addProduct($name,$price,$quantity,$description,$marketId,$categoryId)
+	{
+	  global $dbconnect;
+	  $insertSql="insert into products (name,price,quantity,description,marketId,categoryId) values"
+	  ."('$name','$price','$quantity','$description','$marketId','$categoryId')";
 
-  if($dbconnect->query($insertSql) ) {
-    echo "inserted successfully";
-  }else {
-    echo "problem inserting ";
-  }
-}
+	  if($dbconnect->query($insertSql) ) {
+	    echo "inserted successfully";
+	  }else {
+	    echo "problem inserting ";
+	  }
+	}
 
-function queryProducts($querySql){
-  global $dbconnect;
-  $query=$dbconnect->query($querySql);
-  if ($query->num_rows>0) {
-    $result=array();
-    while ($row=$query->fetch_assoc()) {
-      $result[]=$row;
-    }
-    echo json_encode($result);
-  }
-  else {
-    $result="there is no products";
-    echo json_encode(array('result' => $result ));
-  }
-}
+	function queryProducts($querySql){
+	  global $dbconnect;
+	  $query=$dbconnect->query($querySql);
+	  if ($query->num_rows>0) {
+	    $result=array();
+	    while ($row=$query->fetch_assoc()) {
+	      $result[]=$row;
+	    }
+	    echo json_encode($result);
+	  }
+	  else {
+	    $result="there is no products";
+	    echo json_encode(array('result' => $result ));
+	  }
+	}
 
-function getQuerySql(){
-  $querySql="select * from products ";
-  $product=new Products;
-  if (isset($_GET['categoryId'])) {
-    $categoryId=$_GET['categoryId'];
-    $querySql.="where categoryId = $categoryId ";
-}
-  if (isset($_GET['minPrice'])) {
-    $minPrice=$_GET['minPrice'];
-    if (contains($querySql,"where")) {
-      $querySql.="and price> $minPrice ";
-    }else {
-      $querySql.="where price >$minPrice ";
-    }
-  }
-  if (isset($_GET['maxPrice'])) {
-  $maxPrice=$_GET['maxPrice'];
-  if (contains($querySql,"where")) {
-    $querySql.="and price< $maxPrice > ";
-  }else {
-    $querySql.="where price >$maxPrice ";
-  }
-}
+	function getQuerySql(){
+	  $querySql="select * from products ";
+	  $product=new Products;
 
-if (isset($_GET['orderBy'])) {
-$orderBy=$_GET['orderBy'];
-  $querySql.="order by $orderBy ";
-}
-if (isset($_GET['order'])) {
-$order=$_GET['order'];
+		if (isset($_GET['id'])) {
+			$id=$_GET['id'];
+			$querySql.="where id in ($id)";
+		}
 
-if(contains($querySql,"order by")){
-  $querySql.="$order ";
+	  if (isset($_GET['categoryId'])) {
+	    $categoryId=$_GET['categoryId'];
+			 if (contains($querySql,"where")) {
+				 $querySql.="and categoryId = $categoryId ";
+			 }else{
+				 $querySql.="where categoryId = $categoryId ";
+			 }
+	}
+	  if (isset($_GET['minPrice'])) {
+	    $minPrice=$_GET['minPrice'];
+	    if (contains($querySql,"where")) {
+	      $querySql.="and price> $minPrice ";
+	    }else {
+	      $querySql.="where price >$minPrice ";
+	    }
+	  }
+	  if (isset($_GET['maxPrice'])) {
+	  $maxPrice=$_GET['maxPrice'];
+	  if (contains($querySql,"where")) {
+	    $querySql.="and price< $maxPrice > ";
+	  }else {
+	    $querySql.="where price >$maxPrice ";
+	  }
+	}
+
+	if (isset($_GET['orderBy'])) {
+	$orderBy=$_GET['orderBy'];
+	  $querySql.="order by $orderBy ";
+	}
+	if (isset($_GET['order'])) {
+	$order=$_GET['order'];
+
+	if(contains($querySql,"order by")){
+	  $querySql.="$order ";
+	}else{
+	  $querySql.="order by name $order ";
+	}
+
+	}
+	if (isset($_GET['limit'])) {
+	$limit=$_GET['limit'];
+	  $querySql.="limit $limit ";
+	}
+	if (isset($_GET['page'])) {
+	$page=$_GET['page'];
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=2;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
 }else{
-  $querySql.="order by name $order ";
+	$page=1;
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=2;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
 }
-
-}
-if (isset($_GET['limit'])) {
-$limit=$_GET['limit'];
-  $querySql.="limit $limit ";
-}
-if (isset($_GET['page'])) {
-$page=$_GET['page'];
-if (isset($_GET['limit'])) {
-  $limit=$_GET['limit'];
-  $offset=$limit*($page-1);
-  $querySql.="offset $offset ";
-}else {
-  $limit=2;
-  $offset=$limit*($page-1);
-  $querySql.="limit $limit offset $offset ";
-}
-
-}
-return $querySql;
-}
+	return $querySql;
+	}
 
 
 
-}
+	}
 
  ?>
