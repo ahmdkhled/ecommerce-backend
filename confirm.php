@@ -56,7 +56,7 @@
 		if($dbconnect->query($updateStatusQuery)){
 
 			$response['error'] = false;
-			$response['message'] = 'status successfully updated';
+			$response['message'] = 'your account has activated';
 			
 
 

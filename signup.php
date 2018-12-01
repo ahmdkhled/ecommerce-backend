@@ -40,7 +40,7 @@ use PHPMailer\PHPMailer\Exception;
 
   function isAvailable($email){
     global $dbconnect;
-    $querySql="select * from user where email='$email'";
+    $querySql="select * from users where email='$email'";
     $result=$dbconnect->query($querySql);
     return ($result->num_rows>0) ;
   }
@@ -54,7 +54,7 @@ use PHPMailer\PHPMailer\Exception;
     // create random token with 32 character
     $token = md5(rand(0,1000));
     
-    $insertSql="insert into user (email,password,token,status) values ('$email','$password','$token','0');";
+    $insertSql="insert into users (name,email,password,status,token) values ('ibra','$email','$password','$token','0');";
 
     // case of successfully inserted
     if($dbconnect->query($insertSql) ) {

@@ -28,6 +28,8 @@
   function login($email,$password){
     
      global $dbconnect,$response;
+      // $password = password_hash($password,PASSWORD_BCRYPT);
+      
       $querySql="select * from user where email = '$email' and password ='$password'
                   and status = 1";
       $result=$dbconnect->query($querySql);
