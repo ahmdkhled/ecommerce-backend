@@ -57,9 +57,21 @@
 	  if ($query->num_rows>0) {
 	    $result=array();
 	    while ($row=$query->fetch_assoc()) {
-	      $result[]=$row;
+	    	
+	      $temp['product_id']=$row['id'];
+	      $temp['product_name']=$row['name'];
+	      $temp['product_price']=$row['price'];
+	      $temp['product_quantity']=$row['quantity'];
+	      $temp['product_description']=$row['description'];
+	      $temp['product_marketId']=$row['marketId'];
+	      $temp['product_categoryId']=$row['categoryId'];
+	      $temp['media'][] = array(
+	      				'image_id' => $row['media_id'],
+	      				'image_url' => $row['media_url']
+	      );
+	      array_push($result, $temp);
 	    }
-	    echo json_encode($result);
+	     echo json_encode($result);
 	  }
 	  else {
 	    $result="there is no products";
@@ -68,7 +80,11 @@
 	}
 
 	function getQuerySql(){
-	  $querySql="select * from products ";
+	  $querySql="SELECT *
+				FROM products 
+				INNER JOIN product_media
+				ON products.id = product_media.productId
+				 ";
 	  $product=new Products;
 
 		if (isset($_GET['id'])) {
@@ -115,33 +131,33 @@
 	}
 
 	}
-	if (isset($_GET['limit'])) {
-	$limit=$_GET['limit'];
-	  $querySql.="limit $limit ";
-	}
-	if (isset($_GET['page'])) {
-	$page=$_GET['page'];
-	if (isset($_GET['limit'])) {
-	  $limit=$_GET['limit'];
-	  $offset=$limit*($page-1);
-	  $querySql.="offset $offset ";
-	}else {
-	  $limit=2;
-	  $offset=$limit*($page-1);
-	  $querySql.="limit $limit offset $offset ";
-	}
-}else{
-	$page=1;
-	if (isset($_GET['limit'])) {
-	  $limit=$_GET['limit'];
-	  $offset=$limit*($page-1);
-	  $querySql.="offset $offset ";
-	}else {
-	  $limit=2;
-	  $offset=$limit*($page-1);
-	  $querySql.="limit $limit offset $offset ";
-	}
-}
+// 	if (isset($_GET['limit'])) {
+// 	$limit=$_GET['limit'];
+// 	  $querySql.="limit $limit ";
+// 	}
+// 	if (isset($_GET['page'])) {
+// 	$page=$_GET['page'];
+// 	if (isset($_GET['limit'])) {
+// 	  $limit=$_GET['limit'];
+// 	  $offset=$limit*($page-1);
+// 	  $querySql.="offset $offset ";
+// 	}else {
+// 	  $limit=2;
+// 	  $offset=$limit*($page-1);
+// 	  $querySql.="limit $limit offset $offset ";
+// 	}
+// }else{
+// 	$page=1;
+// 	if (isset($_GET['limit'])) {
+// 	  $limit=$_GET['limit'];
+// 	  $offset=$limit*($page-1);
+// 	  $querySql.="offset $offset ";
+// 	}else {
+// 	  $limit=2;
+// 	  $offset=$limit*($page-1);
+// 	  $querySql.="limit $limit offset $offset ";
+// 	}
+// }
 	return $querySql;
 	}
 
