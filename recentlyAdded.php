@@ -15,7 +15,9 @@ getRecentlyAddedProducts($limit);
 
 function getRecentlyAddedProducts($limit){
   global $dbconnect;
-  $querySql="select * from products order by date desc ";
+  $querySql="select * from products inner join product_media
+   on products.id = product_media.productId
+   order by date desc ";
   if (isset($limit)) {
     $querySql.="limit $limit";
   }else {
