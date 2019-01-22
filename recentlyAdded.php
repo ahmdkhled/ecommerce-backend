@@ -27,7 +27,19 @@ function getRecentlyAddedProducts($limit){
   if ($query->num_rows>0) {
     $result=array();
     while ($row=$query->fetch_assoc()) {
-      $result[]=$row;
+      $temp['product_id']=$row['id'];
+      $temp['product_name']=$row['name'];
+      $temp['product_price']=$row['price'];
+      $temp['product_quantity']=$row['quantity'];
+      $temp['product_description']=$row['description'];
+      $temp['product_marketId']=$row['marketId'];
+      $temp['product_categoryId']=$row['categoryId'];
+      $temp['media'][] = array(
+              'image_id' => $row['media_id'],
+              'image_url' => $row['media_url']
+            );
+      array_push($result, $temp);
+
     }
     echo json_encode($result);
   }
