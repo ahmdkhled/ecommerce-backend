@@ -82,7 +82,7 @@
 	function getQuerySql(){
 	  $querySql="SELECT *
 				FROM products 
-				INNER JOIN product_media
+				LEFT JOIN product_media
 				ON products.id = product_media.productId
 				 ";
 	  $product=new Products;
