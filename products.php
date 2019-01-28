@@ -57,19 +57,29 @@
 	  if ($query->num_rows>0) {
 	    $result=array();
 	    while ($row=$query->fetch_assoc()) {
-	    	
-	      $temp['product_id']=$row['id'];
-	      $temp['product_name']=$row['name'];
-	      $temp['product_price']=$row['price'];
-	      $temp['product_quantity']=$row['quantity'];
-	      $temp['product_description']=$row['description'];
-	      $temp['product_marketId']=$row['marketId'];
-	      $temp['product_categoryId']=$row['categoryId'];
-	      $temp['media'][] = array(
-	      				'image_id' => $row['media_id'],
-	      				'image_url' => $row['media_url']
-	      );
-	      array_push($result, $temp);
+	    	$temp = array();
+	     	$temp['product_id']=$row['id'];
+	      	$temp['product_name']=$row['name'];
+	      	$temp['product_price']=$row['price'];
+	      	$temp['product_quantity']=$row['quantity'];
+	      	$temp['product_description']=$row['description'];
+	      	$temp['product_marketId']=$row['marketId'];
+	      	$temp['product_categoryId']=$row['categoryId'];
+
+	      	// get produc's images
+	      	$imageQuery = "SELECT media_id,media_url
+	      					FROM product_media
+	      					WHERE
+	      					product_media.productId =".$row['id']."";
+	      	$images=$dbconnect->query($imageQuery);
+	      	while($imageRow = $images->fetch_assoc()){
+	      		$temp['media'][] = array(
+	      					'image_id' => $imageRow['media_id'],
+	      					'image_url' => $imageRow['media_url']
+	      		);	
+	      	}				
+	      	
+	      	array_push($result, $temp);
 	    }
 	     echo json_encode($result);
 	  }
@@ -79,12 +89,11 @@
 	  }
 	}
 
+	
+
 	function getQuerySql(){
-	  $querySql="SELECT *
-				FROM products 
-				INNER JOIN product_media
-				ON products.id = product_media.productId
-				 ";
+	  $querySql="SELECT * FROM products";
+
 	  $product=new Products;
 
 		if (isset($_GET['id'])) {
@@ -165,4 +174,12 @@
 
 	}
 
+	
+
  ?>
+
+
+
+
+
+
