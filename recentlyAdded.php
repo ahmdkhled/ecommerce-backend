@@ -15,9 +15,7 @@ getRecentlyAddedProducts($limit);
 
 function getRecentlyAddedProducts($limit){
   global $dbconnect;
-  $querySql="select * from products inner join product_media
-   on products.id = product_media.productId
-   order by date desc ";
+  $querySql="select * from products ";
   if (isset($limit)) {
     $querySql.="limit $limit";
   }else {
@@ -34,10 +32,18 @@ function getRecentlyAddedProducts($limit){
       $temp['product_description']=$row['description'];
       $temp['product_marketId']=$row['marketId'];
       $temp['product_categoryId']=$row['categoryId'];
-      $temp['media'][] = array(
-              'image_id' => $row['media_id'],
-              'image_url' => $row['media_url']
-            );
+      // get produc's images
+      $imageQuery = "SELECT media_id,media_url
+              FROM product_media
+              WHERE
+              product_media.productId =".$row['id']."";
+      $images=$dbconnect->query($imageQuery);
+      while($imageRow = $images->fetch_assoc()){
+        $temp['media'] = array(
+              'image_id' => $imageRow['media_id'],
+              'image_url' => $imageRow['media_url']
+        );
+      }
       array_push($result, $temp);
 
     }
