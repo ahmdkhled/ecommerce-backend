@@ -76,9 +76,9 @@
 	      		$temp['media'][] = array(
 	      					'image_id' => $imageRow['media_id'],
 	      					'image_url' => $imageRow['media_url']
-	      		);	
-	      	}				
-	      	
+	      		);
+	      	}
+
 	      	array_push($result, $temp);
 	    }
 	     echo json_encode($result);
@@ -89,10 +89,10 @@
 	  }
 	}
 
-	
+
 
 	function getQuerySql(){
-	  $querySql="SELECT * FROM products";
+	  $querySql="SELECT * FROM products ";
 
 	  $product=new Products;
 
@@ -174,12 +174,6 @@
 
 	}
 
-	
+
 
  ?>
-
-
-
-
-
-
