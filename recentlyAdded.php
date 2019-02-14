@@ -38,8 +38,9 @@ function getRecentlyAddedProducts($limit){
               WHERE
               product_media.productId =".$row['id']."";
       $images=$dbconnect->query($imageQuery);
+      unset($temp['media']);
       while($imageRow = $images->fetch_assoc()){
-        $temp['media'] = array(
+        $temp['media'][] = array(
               'image_id' => $imageRow['media_id'],
               'image_url' => $imageRow['media_url']
         );
