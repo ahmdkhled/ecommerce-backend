@@ -63,7 +63,8 @@
 	      	$temp['product_price']=$row['price'];
 	      	$temp['product_quantity']=$row['quantity'];
 	      	$temp['product_description']=$row['description'];
-	      	$temp['product_marketId']=$row['marketId'];
+	      	$temp['marketId']=$row['marketId'];
+					$temp['marketName']=$row['marketName'];
 	      	$temp['product_categoryId']=$row['categoryId'];
 
 	      	// get produc's images
@@ -92,7 +93,7 @@
 
 
 	function getQuerySql(){
-	  $querySql="SELECT * FROM products ";
+	  $querySql="SELECT products.*,markets.name marketName FROM products inner JOIN markets ON products.marketId = markets.id  ";
 
 	  $product=new Products;
 
