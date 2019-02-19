@@ -99,31 +99,31 @@
 
 		if (isset($_GET['id'])) {
 			$id=$_GET['id'];
-			$querySql.="where id in ($id)";
+			$querySql.="where products.id in ($id)";
 		}
 
 	  if (isset($_GET['categoryId'])) {
 	    $categoryId=$_GET['categoryId'];
 			 if (contains($querySql,"where")) {
-				 $querySql.="and categoryId = $categoryId ";
+				 $querySql.="and products.categoryId = $categoryId ";
 			 }else{
-				 $querySql.="where categoryId = $categoryId ";
+				 $querySql.="where products.categoryId = $categoryId ";
 			 }
 	}
 	  if (isset($_GET['minPrice'])) {
 	    $minPrice=$_GET['minPrice'];
 	    if (contains($querySql,"where")) {
-	      $querySql.="and price> $minPrice ";
+	      $querySql.="and products.price> $minPrice ";
 	    }else {
-	      $querySql.="where price >$minPrice ";
+	      $querySql.="where products.price >$minPrice ";
 	    }
 	  }
 	  if (isset($_GET['maxPrice'])) {
 	  $maxPrice=$_GET['maxPrice'];
 	  if (contains($querySql,"where")) {
-	    $querySql.="and price< $maxPrice > ";
+	    $querySql.="and products.price< $maxPrice > ";
 	  }else {
-	    $querySql.="where price >$maxPrice ";
+	    $querySql.="where products.price >$maxPrice ";
 	  }
 	}
 
