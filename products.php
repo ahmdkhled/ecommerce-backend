@@ -141,10 +141,7 @@
 	}
 
 	}
-	if (isset($_GET['limit'])) {
-	$limit=$_GET['limit'];
-	  $querySql.="limit $limit ";
-	}
+
 	if (isset($_GET['page'])) {
 	$page=$_GET['page'];
 	if (isset($_GET['limit'])) {
