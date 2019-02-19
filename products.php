@@ -129,7 +129,7 @@
 
 	if (isset($_GET['orderBy'])) {
 	$orderBy=$_GET['orderBy'];
-	  $querySql.="order by $orderBy ";
+	  $querySql.="order by products.$orderBy ";
 	}
 	if (isset($_GET['order'])) {
 	$order=$_GET['order'];
@@ -141,33 +141,33 @@
 	}
 
 	}
-// 	if (isset($_GET['limit'])) {
-// 	$limit=$_GET['limit'];
-// 	  $querySql.="limit $limit ";
-// 	}
-// 	if (isset($_GET['page'])) {
-// 	$page=$_GET['page'];
-// 	if (isset($_GET['limit'])) {
-// 	  $limit=$_GET['limit'];
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="offset $offset ";
-// 	}else {
-// 	  $limit=2;
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="limit $limit offset $offset ";
-// 	}
-// }else{
-// 	$page=1;
-// 	if (isset($_GET['limit'])) {
-// 	  $limit=$_GET['limit'];
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="offset $offset ";
-// 	}else {
-// 	  $limit=2;
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="limit $limit offset $offset ";
-// 	}
-// }
+	if (isset($_GET['limit'])) {
+	$limit=$_GET['limit'];
+	  $querySql.="limit $limit ";
+	}
+	if (isset($_GET['page'])) {
+	$page=$_GET['page'];
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=2;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
+}else{
+	$page=1;
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=2;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
+}
 	return $querySql;
 	}
 
