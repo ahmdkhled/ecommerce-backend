@@ -85,8 +85,8 @@
 	     echo json_encode($result);
 	  }
 	  else {
-	    $result="there is no products";
-	    echo json_encode(array('result' => $result ));
+	    $result=array();
+	    echo json_encode($result);
 	  }
 	}
 
@@ -149,7 +149,7 @@
 	  $offset=$limit*($page-1);
 	  $querySql.="offset $offset ";
 	}else {
-	  $limit=2;
+	  $limit=10;
 	  $offset=$limit*($page-1);
 	  $querySql.="limit $limit offset $offset ";
 	}
@@ -160,7 +160,7 @@
 	  $offset=$limit*($page-1);
 	  $querySql.="offset $offset ";
 	}else {
-	  $limit=2;
+	  $limit=10;
 	  $offset=$limit*($page-1);
 	  $querySql.="limit $limit offset $offset ";
 	}
