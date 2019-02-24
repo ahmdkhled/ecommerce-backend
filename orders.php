@@ -9,6 +9,43 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     $userId=$_POST['userId'];
     makeOrder($orderItems,$quantity,$userId);
   }
+} elseif ($_SERVER['REQUEST_METHOD']=='GET') {
+    if (isset($_GET['userId'])) {
+      $userId=$_GET['userId'];
+      getOrders($userId);
+    }
+
+}
+
+function getOrders($userId){
+  global $dbconnect;
+  $querySql="select * from orders where orders.userId =$userId";
+  $query=$dbconnect->query($querySql);
+  $result=array();
+  if ($query->num_rows>0) {
+    while ($row=$query->fetch_assoc()) {
+      $temp['order_id']=$row['id'];
+      $temp['order_date']=$row['date'];
+      $temp['order_userId']=$row['userId'];
+      $itemsSql="select products.*,order_item.id orderItem_id,
+      order_item.quantity orderItem_quantity
+       from order_item inner join products
+        on order_item.product_id=products.id
+        where order_item.order_id =".$row['id'];
+        //echo $itemsSql;
+      $itemsQuery=$dbconnect->query($itemsSql);
+      if ($itemsQuery->num_rows>0) {
+        while ($item=$itemsQuery->fetch_assoc()) {
+          $temp['orderItems'][]=$item;
+        }
+    }else{
+      $temp['orderItems']=array();
+    }
+    array_push($result,$temp);
+  }
+}
+echo json_encode($result);
+
 }
 
 
