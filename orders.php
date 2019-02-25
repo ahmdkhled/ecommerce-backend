@@ -62,16 +62,17 @@ function makeOrder($orderItems,$quantity,$userId)
   $q=explode(",",$quantity);
 
 if (isset($items)&& count($q)==count($items) ) {
-  $orderSql="insert into orders (userId) values ('$userId')";
+  $orderSql="insert into orders (userId,status) values ('$userId','pending')";
   if ($dbconnect->query($orderSql)) {
     $orderId=$dbconnect->insert_id;
     $response=array();
-    $response['orderId']=$orderId;
-    $response['userId']=$userId;
+    $response['order_id']=$orderId;
+    $response['order_userId']=$userId;
+    $response['order_status']="pending";
     for ($i=0; $i < count($items); $i++) {
       $insertSQL= "insert into order_item (product_id,quantity,order_id) values ('$items[$i]','$q[$i]','$orderId')";
       if ($dbconnect->query($insertSQL)) {
-        $row['productId']=$items[$i];
+        $row['id']=$items[$i];
         $row['quantity']=$q[$i];
         $response['products'][]=$row;
 
