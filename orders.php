@@ -34,13 +34,18 @@ function getOrders($userId){
         where order_item.order_id =".$row['id'];
         //echo $itemsSql;
       $itemsQuery=$dbconnect->query($itemsSql);
+      $order_total=0;
+      $temp['order_total']=0;
       if ($itemsQuery->num_rows>0) {
         while ($item=$itemsQuery->fetch_assoc()) {
           $temp['orderItems'][]=$item;
+
+          $order_total +=$item['orderItem_quantity']*$item['price'];
         }
     }else{
       $temp['orderItems']=array();
     }
+    $temp['order_total']=$order_total;
     array_push($result,$temp);
   }
 }
