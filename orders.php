@@ -27,6 +27,7 @@ function getOrders($userId){
       $temp['order_id']=$row['id'];
       $temp['order_date']=$row['date'];
       $temp['order_userId']=$row['userId'];
+      $temp['order_status']=$row['status'];
       $itemsSql="select products.*,order_item.id orderItem_id,
       order_item.quantity orderItem_quantity
        from order_item inner join products
