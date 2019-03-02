@@ -38,24 +38,15 @@
 	function addAddress($userId,$state,$city,$address_1,$address_2,$zip_code){
 		global $dbconnect;
 
-		$addAddressQuery = "INSERT INTO address (`state`,`city`,`zip_code`,`address_1`,`address_2`) VALUES ('$state','$city',$zip_code,'$address_1','$address_2')";
+		$addAddressQuery = "INSERT INTO address (`state`,`city`,`zip_code`,`address_1`,`address_2`,`user_id`) VALUES ('$state','$city',$zip_code,'$address_1','$address_2',$userId)";
 		if($dbconnect->query($addAddressQuery)){
 			$lastAddressId = $dbconnect->insert_id;
-			$insertIntoUserAddressTable = "INSERT INTO users_address values ($userId,$lastAddressId) ";
-			if($dbconnect->query($insertIntoUserAddressTable)){
-				$GLOBALS['response']['error'] = false;
-       			$GLOBALS['response']['message'] = "successfully inserted";
-       			$GLOBALS['response']['address_id'] = $lastAddressId;
+			$GLOBALS['response']['error'] = false;
+       		$GLOBALS['response']['message'] = "successfully inserted";
+       		$GLOBALS['response']['address_id'] = $lastAddressId;
        			
-			}
-
-			else{
-				$GLOBALS['response']['error'] = true;
-       			$GLOBALS['response']['message'] = "something went wrong while adding address,please try again ".mysqli_error($dbconnect);
-			}
-
-		
 		}
+
 		else{
 			$GLOBALS['response']['error'] = true;
        		$GLOBALS['response']['message'] = "something went wrong while adding address,please try again ".mysqli_error($dbconnect);

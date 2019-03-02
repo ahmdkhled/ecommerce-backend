@@ -26,22 +26,23 @@
 
 	function getInfo($userId){
 		global $dbconnect;
-		$userQuery="SELECT id,name
+		$userQuery="SELECT name,email
 					FROM users 
 					WHERE users.id = $userId";
 		$query=$dbconnect->query($userQuery);
 	  	if ($query->num_rows>0) {
 	    	while ($row=$query->fetch_assoc()) {
-	     		$GLOBALS['response']['user_id']=$row['id'];
-	      		$GLOBALS['response']['user_name']=$row['name'];
+	      		$GLOBALS['response']['name']=$row['name'];
+	      		$GLOBALS['response']['email']=$row['email'];
+	      	}	
 	      		
-	      		
-	      		// get produc's images
-	      		$addressQuery = "SELECT * 
-	      						FROM address
-	      						WHERE address.id IN
-	      						(SELECT users_address.address_id from users_address WHERE users_address.user_id = $userId)";
-	      		$addresses=$dbconnect->query($addressQuery);
+	      	// get user's addresses
+	      	$addressQuery = "SELECT * 
+	      					FROM address
+	      					WHERE address.user_id = $userId";
+	      						
+	      	$addresses=$dbconnect->query($addressQuery);
+	      	if($addresses->num_rows > 0){
 	      		while($addressRow = $addresses->fetch_assoc()){
 	      			$GLOBALS['response']['addresses'][] = array(
 	      						'id' => $addressRow['id'],
@@ -51,11 +52,19 @@
 	      						'address_1' => $addressRow['address_1'],
 	      						'address_2' => $addressRow['address_2']
 	      			);	
-	      		}				
+	      		}
+	      	}
+	      	// user has no addresses
+	      	else{
+	      		$GLOBALS['response']['addresses']= array();
+	      }
 	      	
-	   	 	}
-	     	
-	  	}
+	   	}
+	   	 // invalid user's id
+	  	else{
+	  		$GLOBALS['response']['error'] = false;
+        	$GLOBALS['response']['message'] = "invalid user id";
+    	}
 	}
 
 	echo json_encode($GLOBALS['response']);
