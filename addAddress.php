@@ -45,6 +45,8 @@
 			if($dbconnect->query($insertIntoUserAddressTable)){
 				$GLOBALS['response']['error'] = false;
        			$GLOBALS['response']['message'] = "successfully inserted";
+       			$GLOBALS['response']['address_id'] = $lastAddressId;
+       			
 			}
 
 			else{

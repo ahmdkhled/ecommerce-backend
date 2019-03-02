@@ -2,35 +2,33 @@
 
 	session_start();
 	require_once('dbconnect.php');
-	$response = array();
+	$GLOBALS['response'] = array();
 
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		if(isset($_POST['id'])){
-			getAddress($_POST['id'],$response);
+			getAddress($_POST['id']);
 		}
 
 		// if id dosen't sent
 		else{
-			$response['error'] = true;
-        	$response['message'] = "missing parameters";
-        	echo json_encode($response);
+			$GLOBALS['response']['error'] = true;
+        	$GLOBALS['response']['message'] = "missing parameters";
 		}
 	}
 
 
 	// post method isn't used
 	else {
-		$response['error'] = true;
-        $response['message'] = "Not allowed";
-        echo json_encode($response);
+		$GLOBALS['response']['error'] = true;
+        $GLOBALS['response']['message'] = "Not allowed";
 	}
 
 
 
 
-	function getAddress($userId,$response){
+	function getAddress($userId){
 		global $dbconnect;
-		$querySql="SELECT address.address_1,address.address_2
+		$querySql="SELECT *
 					FROM address 
 					INNER JOIN users_address
 					ON users_address.address_id = address.id
@@ -39,24 +37,27 @@
 
    		if($query->num_rows>0){
    			while ($row = $query->fetch_assoc()) {
-   				$addresses['address'][]=array(
+
+   				$GLOBALS['response'][]=array(
+   									'id' => $row['id'],
+   									'state' => $row['state'],
+   									'city' => $row['city'],
+   									'zip_code' => $row['zip_code'],
    									'address1' => $row['address_1'],			
    									'address2' => $row["address_2"]
    				);
    			}
 
-   		 	echo json_encode($addresses);
 
    		}
 
    		// if result is empty
-   		else{
-   			$response['error'] = false;
-        	$response['message'] = "this user hasn't addresses yet";
-        	echo json_encode($response);
-   		}
+   		// else{
+   		// 	$GLOBALS['response']['error'] = false;
+     //    	$GLOBALS['response']['message'] = "this user hasn't addresses yet";
+   		// }
 	}
 
-
+	echo json_encode($GLOBALS['response']);
 	  
 ?>
