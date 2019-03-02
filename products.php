@@ -63,7 +63,8 @@
 	      	$temp['product_price']=$row['price'];
 	      	$temp['product_quantity']=$row['quantity'];
 	      	$temp['product_description']=$row['description'];
-	      	$temp['product_marketId']=$row['marketId'];
+	      	$temp['marketId']=$row['marketId'];
+					$temp['marketName']=$row['marketName'];
 	      	$temp['product_categoryId']=$row['categoryId'];
 
 	      	// get produc's images
@@ -76,59 +77,59 @@
 	      		$temp['media'][] = array(
 	      					'image_id' => $imageRow['media_id'],
 	      					'image_url' => $imageRow['media_url']
-	      		);	
-	      	}				
-	      	
+	      		);
+	      	}
+
 	      	array_push($result, $temp);
 	    }
 	     echo json_encode($result);
 	  }
 	  else {
-	    $result="there is no products";
-	    echo json_encode(array('result' => $result ));
+	    $result=array();
+	    echo json_encode($result);
 	  }
 	}
 
-	
+
 
 	function getQuerySql(){
-	  $querySql="SELECT * FROM products";
+	  $querySql="SELECT products.*,markets.name marketName FROM products inner JOIN markets ON products.marketId = markets.id  ";
 
 	  $product=new Products;
 
 		if (isset($_GET['id'])) {
 			$id=$_GET['id'];
-			$querySql.="where id in ($id)";
+			$querySql.="where products.id in ($id)";
 		}
 
 	  if (isset($_GET['categoryId'])) {
 	    $categoryId=$_GET['categoryId'];
 			 if (contains($querySql,"where")) {
-				 $querySql.="and categoryId = $categoryId ";
+				 $querySql.="and products.categoryId = $categoryId ";
 			 }else{
-				 $querySql.="where categoryId = $categoryId ";
+				 $querySql.="where products.categoryId = $categoryId ";
 			 }
 	}
 	  if (isset($_GET['minPrice'])) {
 	    $minPrice=$_GET['minPrice'];
 	    if (contains($querySql,"where")) {
-	      $querySql.="and price> $minPrice ";
+	      $querySql.="and products.price> $minPrice ";
 	    }else {
-	      $querySql.="where price >$minPrice ";
+	      $querySql.="where products.price >$minPrice ";
 	    }
 	  }
 	  if (isset($_GET['maxPrice'])) {
 	  $maxPrice=$_GET['maxPrice'];
 	  if (contains($querySql,"where")) {
-	    $querySql.="and price< $maxPrice > ";
+	    $querySql.="and products.price< $maxPrice > ";
 	  }else {
-	    $querySql.="where price >$maxPrice ";
+	    $querySql.="where products.price >$maxPrice ";
 	  }
 	}
 
 	if (isset($_GET['orderBy'])) {
 	$orderBy=$_GET['orderBy'];
-	  $querySql.="order by $orderBy ";
+	  $querySql.="order by products.$orderBy ";
 	}
 	if (isset($_GET['order'])) {
 	$order=$_GET['order'];
@@ -140,33 +141,30 @@
 	}
 
 	}
-// 	if (isset($_GET['limit'])) {
-// 	$limit=$_GET['limit'];
-// 	  $querySql.="limit $limit ";
-// 	}
-// 	if (isset($_GET['page'])) {
-// 	$page=$_GET['page'];
-// 	if (isset($_GET['limit'])) {
-// 	  $limit=$_GET['limit'];
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="offset $offset ";
-// 	}else {
-// 	  $limit=2;
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="limit $limit offset $offset ";
-// 	}
-// }else{
-// 	$page=1;
-// 	if (isset($_GET['limit'])) {
-// 	  $limit=$_GET['limit'];
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="offset $offset ";
-// 	}else {
-// 	  $limit=2;
-// 	  $offset=$limit*($page-1);
-// 	  $querySql.="limit $limit offset $offset ";
-// 	}
-// }
+
+	if (isset($_GET['page'])) {
+	$page=$_GET['page'];
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=10;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
+}else{
+	$page=1;
+	if (isset($_GET['limit'])) {
+	  $limit=$_GET['limit'];
+	  $offset=$limit*($page-1);
+	  $querySql.="offset $offset ";
+	}else {
+	  $limit=10;
+	  $offset=$limit*($page-1);
+	  $querySql.="limit $limit offset $offset ";
+	}
+}
 	return $querySql;
 	}
 
@@ -174,12 +172,6 @@
 
 	}
 
-	
+
 
  ?>
-
-
-
-
-
-

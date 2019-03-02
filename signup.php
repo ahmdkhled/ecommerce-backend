@@ -116,5 +116,3 @@ use PHPMailer\PHPMailer\Exception;
 
 
   echo json_encode($response);
-
-
