@@ -73,12 +73,11 @@
 	      					WHERE
 	      					product_media.productId =".$row['id']."";
 	      	$images=$dbconnect->query($imageQuery);
+	      	if($images->num_rows > 0){
 	      	while($imageRow = $images->fetch_assoc()){
-	      		$temp['media'][] = array(
-	      					'image_id' => $imageRow['media_id'],
-	      					'image_url' => $imageRow['media_url']
-	      		);
+	      		$temp['media'][] =$images;
 	      	}
+	      }else $temp['media']=array();
 
 	      	array_push($result, $temp);
 	    }
