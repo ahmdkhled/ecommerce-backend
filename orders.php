@@ -22,10 +22,7 @@ function getOrders($userId){
   global $dbconnect;
   $querySql="select * from orders where orders.userId =$userId";
   $query=$dbconnect->query($querySql);
-<<<<<<< HEAD
-=======
   $result = array();
->>>>>>> 5b507505176be69e609e39c98ad201443917ea2c
   if ($query->num_rows>0) {
     while ($row=$query->fetch_assoc()) {
       $temp['order_id']=$row['id'];
@@ -38,24 +35,15 @@ function getOrders($userId){
       $addressQuery = "SELECT * FROM address WHERE address.user_id = $userId";
       $addresses = $dbconnect->query($addressQuery); 
       if($addresses->num_rows > 0){
-<<<<<<< HEAD
-      	while ($address=$addresses->fetch_assoc()){
-      		$temp['address']= $address;
-      	}
-=======
+
         while ($address=$addresses->fetch_assoc()){
           $temp['address']= $address;
         }
->>>>>>> 5b507505176be69e609e39c98ad201443917ea2c
       }
 
       // if no addresses
       else{
-<<<<<<< HEAD
       	$temp['address'] = "";
-=======
-        $temp['address'] = "";
->>>>>>> 5b507505176be69e609e39c98ad201443917ea2c
       }
 
 
@@ -80,19 +68,16 @@ function getOrders($userId){
     }
     $temp['order_total']=$order_total;
     
-<<<<<<< HEAD
   }
 }
 
-echo json_encode($temp);
-=======
+
     array_push($result,$temp);
     
   }
 }
 
 echo json_encode($result);
->>>>>>> 5b507505176be69e609e39c98ad201443917ea2c
 
 }
 
@@ -126,13 +111,10 @@ if (isset($items)&& count($q)==count($items) ) {
 
   // error while inserting new order
   else{
-<<<<<<< HEAD
   	$response['error'] = true;
   	$response['message'] =mysqli_error($dbconnect); 
-=======
     $response['error'] = true;
     $response['message'] =mysqli_error($dbconnect); 
->>>>>>> 5b507505176be69e609e39c98ad201443917ea2c
   }
 }
 
